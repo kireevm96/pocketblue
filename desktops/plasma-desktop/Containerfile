@@ -40,7 +40,32 @@ RUN dnf -y install \
     --exclude google-noto-sans-mono-vf-fonts \
     --exclude google-noto-serif-vf-fonts \
     --exclude qt5-qtwebkit \
-    --exclude kwebkitpart
+    --exclude kwebkitpart  && \
+    dnf -y install \
+        fex-emu \
+        fex-emu-filesystem \
+        fex-emu-rootfs-fedora \
+        fex-emu-thunks \
+        fex-emu-utils \
+        glibc-langpack-ru \
+        htop \
+        kde-l10n-ru \
+        langpacks-core-ru \
+        langpacks-ru \
+        mc \
+        patchelf \
+        steam-devices \
+        blender \
+        gimp \
+        inkscape \
+        ffmpeg-free \
+        vlc \
+        git \
+        vim-enhanced \
+        curl \
+        wget \
+        vlc-plugin-ffmpeg \
+        waydroid
 
 RUN systemctl enable sddm.service
 
