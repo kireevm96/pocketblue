@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        desktop: [gnome-desktop, gnome-mobile, plasma-desktop, plasma-mobile, phosh]
+        desktop: [plasma-desktop]
     uses: ./.github/workflows/helper-build-container.yml
     with:
       from_tag: ${{ inputs.from_tag }}

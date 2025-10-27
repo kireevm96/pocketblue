@@ -65,7 +65,8 @@ RUN dnf -y install \
         curl \
         wget \
         vlc-plugin-ffmpeg \
-        waydroid
+        waydroid \
+        kinfocenter
 
 RUN systemctl enable sddm.service
 
