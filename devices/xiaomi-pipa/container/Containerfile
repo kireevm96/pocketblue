@@ -12,8 +12,9 @@ RUN mkdir -p /boot/dtb && \
         kernel-core \
         kernel-modules \
         kernel-modules-core && \
-    dnf -y copr enable kireevm96/sm8250 && \
-    dnf -y install --from-repo='copr:copr.fedorainfracloud.org:kireevm96:sm8250' 'kernel-0:6.15.11-1.pipa.*' 'kernel-headers-0:6.15.11-1.pipa.*' && \
+    dnf -y install \
+        kernel \
+        kernel-headers && \
     rm -r /boot/dtb
 
 RUN dnf -y install \
