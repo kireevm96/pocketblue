@@ -1,17 +1,9 @@
 ARG from
 FROM $from
 
-COPY etc/ /etc/
+ARG target_tag
 
-# kernel
-RUN mkdir -p /boot/dtb && \
-    dnf -y remove \
-        kernel \
-        kernel-core \
-        kernel-modules \
-        kernel-modules-core && \
-    dnf -y install kernel && \
-    rm -r /boot/dtb
+COPY etc/ /etc/
 
 RUN dnf -y install \
     xiaomi-nabu-configs \
@@ -23,6 +15,18 @@ RUN dnf -y install \
     rmtfs \
     qrtr
 
+# kernel
+RUN mkdir -p /boot/dtb && \
+    dnf -y remove \
+        kernel \
+        kernel-core \
+        kernel-modules \
+        kernel-modules-core && \
+    rm -rf /usr/lib/modules/* && \
+    dnf -y install kernel && \
+    rm -r /boot/dtb
+
+# services
 RUN systemctl enable \
     tqftpserv.service \
     rmtfs.service \
