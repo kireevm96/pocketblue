@@ -12,21 +12,14 @@ on:
         description: 'fedora branch'
         required: true
         options:
-          - '42'
           - '43'
-          - 'rawhide'
         default: '43'
       device:
         type: choice
         description: 'device'
         required: true
         options:
-          - 'all'
-          - 'nothing-spacewar'
-          - 'oneplus-sdm845'
-          - 'xiaomi-nabu'
-          - 'xiaomi-pipa'
-        default: 'all'
+        default: 'xiaomi-pipa'
   push:
     paths:
       - 'Containerfile'
@@ -60,9 +53,6 @@ jobs:
           vars_registry: ${{ vars.REGISTRY }}
           device: ${{ inputs.device || '' }}
           device_list: |
-            nothing-spacewar
-            oneplus-sdm845
-            xiaomi-nabu
             xiaomi-pipa
 
   build:
@@ -74,7 +64,7 @@ jobs:
       fail-fast: false
       matrix:
         device: ${{ fromJson(needs.config.outputs.devices) }}
-        desktop: [gnome-desktop, gnome-mobile, plasma-desktop, plasma-mobile, phosh]
+        desktop: [plasma-desktop]
     uses: ./.github/workflows/helper-build-container.yml
     with:
       fedora_branch: ${{ inputs.fedora_branch || 43 }}

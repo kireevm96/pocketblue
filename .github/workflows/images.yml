@@ -8,19 +8,13 @@ on:
         description: 'device name'
         required: true
         options:
-          - nothing-spacewar
-          - oneplus-sdm845
-          - xiaomi-nabu
           - xiaomi-pipa
-          - xunlong-orangepi3-lts
       fedora_branch:
         type: choice
         description: fedora branch
         required: true
         options:
-          - '42'
           - '43'
-          - 'rawhide'
         default: '43'
 jobs:
   images:
@@ -28,10 +22,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        desktop: [gnome-desktop, gnome-mobile, plasma-desktop, plasma-mobile, phosh]
+        desktop: [plasma-desktop]
     name: ${{ inputs.device }}-${{ matrix.desktop }}:${{ inputs.fedora_branch }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: pocketblue/actions/images@main
         with:
           device: ${{ inputs.device }}

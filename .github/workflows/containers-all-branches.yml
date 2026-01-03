@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        fedora_branch: ['42', '43', 'rawhide']
+        fedora_branch: ['43']
     uses: ./.github/workflows/containers.yml
     with:
       fedora_branch: ${{ matrix.fedora_branch }}

@@ -12,27 +12,57 @@ dnf -y remove \
     ark \
     filelight \
     kcharselect \
-    kdebugsettings \
     kde-connect \
-    khelpcenter \
-    kinfocenter \
     kwrite \
     plasma-systemmonitor \
     akonadi-server \
     akonadi-server-mysql \
-    colord-kde \
-    plasma-print-manager \
-    plasma-workspace-wallpapers \
-    plasma-desktop-doc \
-    phonon-qt6-backend-vlc \
-    vlc-libs \
-    vlc-plugins-base \
-    vlc-plugin-pulseaudio \
-    vlc-plugin-gstreamer \
-    phonon-backend-vlc-common \
-    google-droid-sans-fonts \
-    google-noto-serif-fonts \
-    google-noto-sans-mono-vf-fonts \
-    google-noto-serif-vf-fonts
+    colord-kde
+
+dnf -y remove \
+    qemu-user-static-x86
+
+dnf -y install \
+    fex-emu \
+    fex-emu-devel \
+    fex-emu-filesystem \
+    fex-emu-thunks \
+    fex-emu-utils \
+    fmt-devel \
+    --exclude=fex-emu-rootfs-fedora
+dnf -y remove \
+    fex-emu-rootfs-fedora
+
+
+dnf -y install \
+    glibc-langpack-ru \
+    htop \
+    kde-l10n-ru \
+    langpacks-core-ru \
+    langpacks-ru \
+    mc \
+    patchelf \
+    steam-devices \
+    blender \
+    gimp \
+    inkscape \
+    ffmpeg-free \
+    vlc \
+    git \
+    vim-enhanced \
+    curl \
+    wget \
+    vlc-plugin-ffmpeg \
+    kinfocenter \
+	waydroid \
+    chromium
+
+dnf install -y terra-release
+
+dnf install -y throne --refresh
+
+chmod +x /usr/install-fexwrap.sh
+
+exec /usr/install-fexwrap.sh
 
 systemctl enable sddm.service
