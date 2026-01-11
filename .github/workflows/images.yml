@@ -25,7 +25,7 @@ jobs:
         desktop: [plasma-desktop]
     name: ${{ inputs.device }}-${{ matrix.desktop }}:${{ inputs.fedora_branch }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: pocketblue/actions/images@main
         with:
           device: ${{ inputs.device }}
