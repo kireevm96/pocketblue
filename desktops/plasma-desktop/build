@@ -17,7 +17,20 @@ dnf -y remove \
     plasma-systemmonitor \
     akonadi-server \
     akonadi-server-mysql \
-    colord-kde
+    colord-kde \
+    plasma-print-manager \
+    plasma-workspace-wallpapers \
+    plasma-desktop-doc \
+    phonon-qt6-backend-vlc \
+    vlc-libs \
+    vlc-plugins-base \
+    vlc-plugin-pulseaudio \
+    vlc-plugin-gstreamer \
+    phonon-backend-vlc-common \
+    google-droid-sans-fonts \
+    google-noto-serif-fonts \
+    google-noto-sans-mono-vf-fonts \
+    google-noto-serif-vf-fonts
 
 dnf -y remove \
     qemu-user-static-x86
@@ -65,4 +78,3 @@ chmod +x /usr/install-fexwrap.sh
 
 exec /usr/install-fexwrap.sh
 
-systemctl enable sddm.service
