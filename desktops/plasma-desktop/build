@@ -14,22 +14,19 @@ dnf -y remove \
     kcharselect \
     kde-connect \
     kwrite \
-    plasma-systemmonitor \
     akonadi-server \
     akonadi-server-mysql \
     colord-kde \
-    plasma-print-manager \
-    plasma-workspace-wallpapers \
     plasma-desktop-doc \
     phonon-qt6-backend-vlc \
+    phonon-backend-vlc-common \
+    vlc \
+    vlc-plugin-ffmpeg \
     vlc-libs \
     vlc-plugins-base \
     vlc-plugin-pulseaudio \
     vlc-plugin-gstreamer \
-    phonon-backend-vlc-common \
-    google-droid-sans-fonts \
-    google-noto-serif-fonts \
-    google-noto-sans-mono-vf-fonts \
+    vlc-plugin-ffmpeg \
     google-noto-serif-vf-fonts
 
 dnf -y remove \
@@ -60,12 +57,10 @@ dnf -y install \
     gimp \
     inkscape \
     ffmpeg-free \
-    vlc \
     git \
     vim-enhanced \
     curl \
     wget \
-    vlc-plugin-ffmpeg \
     kinfocenter \
 	waydroid \
     chromium
