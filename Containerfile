@@ -7,17 +7,15 @@ ARG target_tag
 
 FROM scratch AS ctx
 
-ARG device
-ARG desktop
-
 COPY common /common
-COPY devices/$device /device
-COPY desktops/$desktop /desktop
+COPY devices /devices
+COPY desktops /desktops
 
 # Building the image
 
 FROM $base
 
+ARG device
 ARG desktop
 ARG target_tag
 
@@ -25,24 +23,25 @@ ARG target_tag
 ARG xiaomi_nabu_samsung_ufs=false
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
-    cd /ctx/common && \
-    ./build && \
+    --mount=type=cache,target=/var/cache \
+    env --chdir=/ctx/common ./build && \
     /ctx/common/cleanup
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
-    cd /ctx/device && \
-    ./build && \
+    --mount=type=cache,target=/var/cache \
+    env --chdir=/ctx/devices/$device ./build && \
     /ctx/common/cleanup
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
-    cd /ctx/desktop && \
-    ./build && \
+    --mount=type=cache,target=/var/cache \
+    env --chdir=/ctx/desktops/$desktop ./build && \
     /ctx/common/cleanup
 
 # os-release file
 RUN sed -i "s/^PRETTY_NAME=.*/PRETTY_NAME=\"Fedora Linux $target_tag ($desktop)\"/" /usr/lib/os-release
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    /ctx/common/cleanup && \
     /ctx/common/finalize
 
 RUN bootc container lint --no-truncate

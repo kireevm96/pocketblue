@@ -2,4 +2,29 @@
 
 set -uexo pipefail
 
-# Nothing to do here yet!
+cp -arfT files/etc /etc
+cp -arfT files/usr /usr
+
+dnf -y install \
+    hciattach-opi \
+    uwe5622-firmware \
+    armbian-led-state \
+    gdisk
+
+mkdir -p /boot/dtb
+dnf -y remove \
+    kernel \
+    kernel-core \
+    kernel-modules \
+    kernel-modules-core
+rm -rf /usr/lib/modules/*
+dnf -y install kernel
+rm -r /boot/dtb
+
+systemctl disable fstrim.timer
+systemctl mask fstrim.timer
+
+systemctl enable sprd-bluetooth.service
+systemctl enable aw859a-wifi.service
+systemctl enable armbian-led-state.service
+systemctl enable repart-root-disk.service
