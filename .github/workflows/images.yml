@@ -1,49 +1,117 @@
-name: images
-run-name: 'images: ${{ inputs.device }} / fedora ${{ inputs.tag }}'
+name: containers
 on:
+  workflow_call:
+    inputs:
+      fedora_branch:
+        required: true
+        type: string
+      device:
+        type: string
+        required: false
+      desktop:
+        type: string
+        required: false
+      target_tag_override:
+        type: string
+        required: false
+      xiaomi_nabu_samsung_ufs:
+        type: boolean
+        required: true
   workflow_dispatch:
     inputs:
-      device:
+      fedora_branch:
         type: choice
-        description: 'device name'
+        description: 'fedora branch'
         required: true
         options:
-          - xiaomi-pipa
-      tag:
-        type: string
-        description: image tag
-        required: true
+          - '43'
+          - '44'
+          - 'rawhide'
         default: '43'
-      nabu_samsung_ufs:
+      device:
+        type: choice
+        description: 'device'
+        required: true
+        options:
+          - 'all'
+          - 'xiaomi-pipa'
+        default: 'all'
+      desktop:
+        type: choice
+        description: 'desktop'
+        required: true
+        options:
+          - 'all'
+          - 'plasma-desktop'
+        default: 'all'
+      target_tag_override:
+        type: string
+        description: 'override target tag'
+        required: false
+      xiaomi_nabu_samsung_ufs:
         type: boolean
-        description: build with Samsung UFS support (xiaomi-nabu only)
+        description: 'ARG: xiaomi_nabu_samsung_ufs'
         required: true
         default: false
+
+run-name: >
+  containers:
+  fedora ${{ inputs.fedora_branch || 43 }}
+  ${{ inputs.device && inputs.device != 'all' && format(' | {0}', inputs.device) || '' }}
+  ${{ inputs.desktop && inputs.desktop != 'all' && format(' | {0}', inputs.desktop) || '' }}
+  ${{ github.event_name == 'push' && format(' | {0}', github.event.head_commit.message) || '' }}
+
 jobs:
-  images:
+  config:
     runs-on: ubuntu-24.04-arm
+    outputs:
+      target_tag: ${{ steps.config.outputs.target_tag }}
+      expires: ${{ steps.config.outputs.expires }}
+      latest: ${{ steps.config.outputs.latest }}
+      registry: ${{ steps.config.outputs.registry }}
+      devices: ${{ steps.config.outputs.devices }}
+    steps:
+      - name: config
+        id: config
+        uses: pocketblue/actions/container-config@main
+        with:
+          from_tag: ${{ inputs.fedora_branch || 43 }}
+          vars_registry: ${{ vars.REGISTRY }}
+          device: ${{ inputs.device || '' }}
+          device_list: |
+            xiaomi-pipa
+
+  desktops:
+    runs-on: ubuntu-24.04-arm
+    outputs:
+      desktops: ${{ steps.desktops.outputs.desktops }}
+    steps:
+      - id: desktops
+        uses: pocketblue/actions/select-desktops@main
+        with:
+          desktop: ${{ inputs.desktop || '' }}
+          desktop_list: |
+            plasma-desktop
+
+  build:
+    needs:
+      - config
+      - desktops
+    secrets: inherit
+    permissions:
+      packages: write
     strategy:
       fail-fast: false
       matrix:
-        desktop: [plasma-desktop]
-    name: ${{ inputs.device }}-${{ matrix.desktop }}:${{ inputs.tag }}
-    steps:
-      - uses: actions/checkout@v6
-      - uses: pocketblue/actions/images@main
-        with:
-          device: ${{ inputs.device }}
-          registry: ${{ vars.REGISTRY || format('ghcr.io/{0}', github.repository_owner) }}
-          image_name: ${{ inputs.device }}-${{ matrix.desktop }}
-          image_tag: ${{ inputs.tag }}
-          build_aux: ${{ inputs.device == 'xiaomi-nabu' && inputs.nabu_samsung_ufs && 'build-aux.samsung' || 'build-aux' }}
-      - uses: actions/upload-artifact@v4
-        with:
-          name: pocketblue-${{ inputs.device }}-${{ matrix.desktop }}-${{ inputs.tag }}
-          path: pocketblue-${{ inputs.device }}-${{ matrix.desktop }}-${{ inputs.tag }}.7z
-          compression-level: 0
-      - uses: actions/upload-artifact@v4
-        with:
-          if-no-files-found: ignore
-          name: rootfs-${{ inputs.device }}-${{ matrix.desktop }}-${{ inputs.tag }}
-          path: rootfs-${{ inputs.device }}-${{ matrix.desktop }}-${{ inputs.tag }}.ero
-          compression-level: 0
+        device: ${{ fromJson(needs.config.outputs.devices) }}
+        desktop: ${{ fromJson(needs.desktops.outputs.desktops) }}
+    uses: ./.github/workflows/helper-build-container.yml
+    with:
+      fedora_branch: ${{ inputs.fedora_branch || 43 }}
+      registry: ${{ needs.config.outputs.registry }}
+      device: ${{ matrix.device }}
+      desktop: ${{ matrix.desktop }}
+      tag: ${{ inputs.target_tag_override && inputs.target_tag_override || needs.config.outputs.target_tag }}
+      latest: ${{ needs.config.outputs.latest }}
+      expires: ${{ needs.config.outputs.expires }}
+      xiaomi_nabu_samsung_ufs: ${{ inputs.xiaomi_nabu_samsung_ufs || false }}

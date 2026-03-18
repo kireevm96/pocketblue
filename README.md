@@ -17,7 +17,10 @@ This is a work-in-progress. During the installation process all data on your dev
 
 - [Xiaomi Pad 5](https://pocketblue.github.io/devices/xiaomi-nabu)
 - [Xiaomi Pad 6](https://pocketblue.github.io/devices/xiaomi-pipa)
-- [OnePlus 6/6T](https://pocketblue.github.io/devices/oneplus-sdm845)
+- [Qualcomm SDM845](https://pocketblue.github.io/devices/qualcomm-sdm845)
+    - [OnePlus 6/6T](https://pocketblue.github.io/devices/oneplus-sdm845)
+    - [Xiaomi Poco F1](https://pocketblue.github.io/devices/xiaomi-beryllium)
+- [Orange Pi 3 LTS](https://pocketblue.github.io/devices/xunlong-orangepi3-lts)
 
 ### Useful information
 
@@ -39,12 +42,13 @@ This is a work-in-progress. During the installation process all data on your dev
 
 Main chats:
 
-- [t.me/fedoramobility](https://t.me/fedoramobility) - Pocketblue dev chat (Telegram)
-- [matrix.to/#/#mobility:fedoraproject.org](https://matrix.to/#/#mobility:fedoraproject.org) - Fedora Mobility general chat (Matrix)
+- Pocketblue Matrix space: [#pocketblue:federated.nexus](https://matrix.to/#/#pocketblue:federated.nexus)
+- Main Pocketblue Matrix room [#pocketblue-dev:federated.nexus](https://matrix.to/#/#pocketblue-dev:federated.nexus) is bridged with the [t.me/fedoramobility](https://t.me/fedoramobility) Telegram chat
+- Fedora Mobility general Matrix room: [#mobility:fedoraproject.org](https://matrix.to/#/#mobility:fedoraproject.org)
 
 Other related chats:
 
-- [matrix.to/#/#mobility-sdm845:fedoraproject.org](https://matrix.to/#/#mobility-sdm845:fedoraproject.org) - Fedora Mobility chat for sdm845 devices
+- [#mobility-sdm845:fedoraproject.org](https://matrix.to/#/#mobility-sdm845:fedoraproject.org) - Fedora Mobility room for sdm845 devices
 - [t.me/nabulinux](https://t.me/nabulinux) - Xiaomi Pad 5 Linux chat
 - [t.me/nabulinuxru](https://t.me/nabulinuxru) - Xiaomi Pad 5 Linux chat (ru)
 - [t.me/XiaomiPad5Official](https://t.me/XiaomiPad5Official) - Xiaomi Pad 5 ROMs chat

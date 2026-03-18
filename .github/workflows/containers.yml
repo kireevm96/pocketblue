@@ -8,6 +8,9 @@ on:
       device:
         type: string
         required: false
+      desktop:
+        type: string
+        required: false
       target_tag_override:
         type: string
         required: false
@@ -22,6 +25,8 @@ on:
         required: true
         options:
           - '43'
+          - '44'
+          - 'rawhide'
         default: '43'
       device:
         type: choice
@@ -30,6 +35,14 @@ on:
         options:
           - 'all'
           - 'xiaomi-pipa'
+        default: 'all'
+      desktop:
+        type: choice
+        description: 'desktop'
+        required: true
+        options:
+          - 'all'
+          - 'plasma-desktop'
         default: 'all'
       target_tag_override:
         type: string
@@ -40,19 +53,12 @@ on:
         description: 'ARG: xiaomi_nabu_samsung_ufs'
         required: true
         default: false
-  push:
-    paths:
-      - 'Containerfile'
-      - 'common/**'
-      - 'devices/**'
-      - '!devices/*/build-aux/**'
-      - '!devices/*/flash-scripts/**'
-      - 'desktops/**'
 
 run-name: >
   containers:
   fedora ${{ inputs.fedora_branch || 43 }}
   ${{ inputs.device && inputs.device != 'all' && format(' | {0}', inputs.device) || '' }}
+  ${{ inputs.desktop && inputs.desktop != 'all' && format(' | {0}', inputs.desktop) || '' }}
   ${{ github.event_name == 'push' && format(' | {0}', github.event.head_commit.message) || '' }}
 
 jobs:
@@ -74,8 +80,23 @@ jobs:
           device: ${{ inputs.device || '' }}
           device_list: |
             xiaomi-pipa
+
+  desktops:
+    runs-on: ubuntu-24.04-arm
+    outputs:
+      desktops: ${{ steps.desktops.outputs.desktops }}
+    steps:
+      - id: desktops
+        uses: pocketblue/actions/select-desktops@main
+        with:
+          desktop: ${{ inputs.desktop || '' }}
+          desktop_list: |
+            plasma-desktop
+
   build:
-    needs: config
+    needs:
+      - config
+      - desktops
     secrets: inherit
     permissions:
       packages: write
@@ -83,7 +104,7 @@ jobs:
       fail-fast: false
       matrix:
         device: ${{ fromJson(needs.config.outputs.devices) }}
-        desktop: [plasma-desktop]
+        desktop: ${{ fromJson(needs.desktops.outputs.desktops) }}
     uses: ./.github/workflows/helper-build-container.yml
     with:
       fedora_branch: ${{ inputs.fedora_branch || 43 }}
